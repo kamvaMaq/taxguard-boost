@@ -62,7 +62,8 @@ export function TaxOfficeLocator() {
       .then(() => {
         if (cancelled || !mapEl.current) return;
         const g = (window as any).google;
-        const centre = { lat: offices[0].lat, lng: offices[0].lng };
+        const first = offices[0]!;
+        const centre = { lat: first.lat, lng: first.lng };
         mapRef.current ??= new g.maps.Map(mapEl.current, { center: centre, zoom: 11 });
         mapRef.current.setCenter(centre);
         markersRef.current.forEach((m) => m.setMap(null));

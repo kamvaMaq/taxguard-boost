@@ -145,15 +145,49 @@ function Landing() {
       </section>
 
       <section className="mx-auto max-w-6xl px-4 py-8">
-        <div className="grid gap-4 sm:grid-cols-2">
-          {FEATURES.map((f) => (
-            <div key={f.title} className="surface p-5">
-              <f.icon className="size-5 text-primary" aria-hidden />
-              <h2 className="mt-3 font-display text-lg font-semibold">{f.title}</h2>
-              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{f.body}</p>
-            </div>
-          ))}
+        <h2 className="font-display text-xl font-semibold">What TaxGuard SA does for you</h2>
+        <Carousel opts={{ align: "start" }} className="mt-4">
+          <CarouselContent>
+            {FEATURES.map((f) => (
+              <CarouselItem key={f.title} className="sm:basis-1/2 lg:basis-1/3">
+                <div className="surface h-full p-5">
+                  <f.icon className="size-5 text-primary" aria-hidden />
+                  <h3 className="mt-3 font-display text-lg font-semibold">{f.title}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{f.body}</p>
+                </div>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          <div className="mt-4 flex justify-end gap-2">
+            <CarouselPrevious className="static translate-y-0" />
+            <CarouselNext className="static translate-y-0" />
+          </div>
+        </Carousel>
+      </section>
+
+      <section className="mx-auto max-w-6xl px-4 py-8">
+        <div className="surface p-6">
+          <h2 className="font-display text-xl font-semibold">Questions people actually ask</h2>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Tap a question to open the plain-language answer.
+          </p>
+          <Accordion type="single" collapsible className="mt-3">
+            {EXPLAINERS.map((item) => (
+              <AccordionItem key={item.q} value={item.q}>
+                <AccordionTrigger className="text-left text-sm font-medium">
+                  {item.q}
+                </AccordionTrigger>
+                <AccordionContent className="text-sm leading-relaxed text-muted-foreground">
+                  {item.a}
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
         </div>
+      </section>
+
+      <section className="mx-auto max-w-6xl px-4 py-8">
+        <TaxOfficeLocator />
       </section>
 
       <section className="mx-auto max-w-6xl px-4 pb-16">

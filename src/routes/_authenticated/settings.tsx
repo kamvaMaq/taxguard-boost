@@ -46,7 +46,7 @@ function SettingsPage() {
     estimated_annual_turnover: "",
   });
   const [busy, setBusy] = useState(false);
-  const [demoBusy, setDemoBusy] = useState(false);
+  
 
   useEffect(() => {
     if (profile)
@@ -113,107 +113,6 @@ function SettingsPage() {
     toast.success("Business details saved.");
   }
 
-  async function loadDemo() {
-    if (!uid || !config?.active) return;
-    setDemoBusy(true);
-    try {
-      const now = new Date();
-      const monthAt = (back: number) =>
-        new Date(now.getFullYear(), now.getMonth() - back, 1).toISOString().slice(0, 10);
-      const months: string[] = [monthAt(3), monthAt(2), monthAt(1), monthAt(0)];
-      const salaryRows = months.map((month, i) => {
-        const gross = 21500 + i * 500;
-        const est = estimateMonthlyPaye(config.active!, gross, 30).estimatedPaye;
-        const actual = i === 2 ? 0 : Math.round(est * (i === 1 ? 0.7 : 1) * 100) / 100;
-        return {
-          user_id: uid,
-          period_month: month,
-          tax_year: taxYearFor(month),
-          basic_salary: gross,
-          bonus: 0,
-          overtime: 0,
-          other_taxable_income: 0,
-          gross_salary: gross,
-          paye_deducted: actual,
-          estimated_paye: Math.round(est * 100) / 100,
-          paye_difference: Math.round((est - actual) * 100) / 100,
-          uif: 177.12,
-          other_deductions: 0,
-          net_salary: gross - actual - 177.12,
-          tax_status: payeStatus(est, actual),
-          is_demo: true,
-        };
-      });
-      const deposits = [
-        { d: monthAt(3), a: 8400, s: "Thandi's Spaza order", c: "business_sale" },
-        { d: monthAt(2), a: 12750, s: "Market weekend takings", c: "business_sale" },
-        { d: monthAt(1), a: 5000, s: "Loan from cousin", c: "loan" },
-        { d: monthAt(0), a: 3200, s: "Unknown EFT", c: "untagged" },
-      ].map((r) => ({
-        user_id: uid,
-        deposit_date: r.d,
-        amount: r.a,
-        source_description: r.s,
-        category: r.c,
-        is_demo: true,
-      }));
-      const expenses = [
-        { d: monthAt(3), v: "Makro", a: 4300, c: "cost_of_sales", cap: false },
-        { d: monthAt(2), v: "Engen garage", a: 950, c: "transport", cap: false },
-        { d: monthAt(2), v: "Vodacom", a: 349, c: "telephone_data", cap: false },
-        { d: monthAt(1), v: "Game", a: 6200, c: "capital_asset", cap: true },
-        { d: monthAt(0), v: "Landlord", a: 2500, c: "rent", cap: false },
-      ].map((r) => ({
-        user_id: uid,
-        expense_date: r.d,
-        vendor: r.v,
-        amount: r.a,
-        vat_amount: Math.round((r.a - r.a / 1.15) * 100) / 100,
-        category: r.c,
-        ai_suggested_category: r.c,
-        ai_reason: "Demo record",
-        is_capital_item: r.cap,
-        needs_review: false,
-        is_demo: true,
-      }));
-
-      const results = await Promise.all([
-        supabase.from("salary_records").insert(salaryRows),
-        supabase.from("income_deposits").insert(deposits),
-        supabase.from("expense_records").insert(expenses),
-        supabase.from("tax_provisions").insert({
-          user_id: uid,
-          tax_year: currentTaxYear(),
-          set_aside_date: monthAt(1),
-          amount: 2500,
-          notes: "Demo: moved to savings",
-          is_demo: true,
-        }),
-      ]);
-      const failed = results.find((r) => r.error);
-      if (failed?.error) throw failed.error;
-      refresh(["salary", "deposits", "expenses", "provisions", "alerts"]);
-      toast.success("Demo records added. They are labelled Demo everywhere.");
-    } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Could not load the demo records.");
-    } finally {
-      setDemoBusy(false);
-    }
-  }
-
-  async function clearDemo() {
-    if (!uid) return;
-    setDemoBusy(true);
-    await Promise.all([
-      supabase.from("salary_records").delete().eq("user_id", uid).eq("is_demo", true),
-      supabase.from("income_deposits").delete().eq("user_id", uid).eq("is_demo", true),
-      supabase.from("expense_records").delete().eq("user_id", uid).eq("is_demo", true),
-      supabase.from("tax_provisions").delete().eq("user_id", uid).eq("is_demo", true),
-    ]);
-    setDemoBusy(false);
-    refresh(["salary", "deposits", "expenses", "provisions", "alerts"]);
-    toast.success("Demo records removed.");
-  }
 
   return (
     <div className="space-y-6">

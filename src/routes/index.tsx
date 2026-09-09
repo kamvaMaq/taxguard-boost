@@ -3,6 +3,20 @@ import { Camera, ShieldCheck, Wallet, FileSearch, Languages, Calculator } from "
 import heroImage from "@/assets/hero-receipt.jpg";
 import { Button } from "@/components/ui/button";
 import { Disclaimer } from "@/components/Disclaimer";
+import { TaxOfficeLocator } from "@/components/TaxOfficeLocator";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 import { FILING_SEASON, daysUntil } from "@/lib/tax-year";
 
 export const Route = createFileRoute("/")({

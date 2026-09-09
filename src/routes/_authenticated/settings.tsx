@@ -203,21 +203,6 @@ function SettingsPage() {
         </div>
       </form>
 
-      <section className="surface p-5">
-        <h2 className="font-display text-lg font-semibold">Try it with example records</h2>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Adds a few made-up payslips, deposits and receipts so you can see how everything works.
-          Each one is labelled Demo and you can remove them all at once.
-        </p>
-        <div className="mt-3 flex gap-2">
-          <Button onClick={loadDemo} disabled={demoBusy} variant="outline">
-            {demoBusy ? "Working…" : "Load demo records"}
-          </Button>
-          <Button onClick={clearDemo} disabled={demoBusy} variant="ghost">
-            Remove demo records
-          </Button>
-        </div>
-      </section>
 
       <section className="surface p-5 text-sm">
         <h2 className="font-display text-lg font-semibold">What we keep, and what we never ask for</h2>

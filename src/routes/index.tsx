@@ -3,6 +3,20 @@ import { Camera, ShieldCheck, Wallet, FileSearch, Languages, Calculator } from "
 import heroImage from "@/assets/hero-receipt.jpg";
 import { Button } from "@/components/ui/button";
 import { Disclaimer } from "@/components/Disclaimer";
+import { TaxOfficeLocator } from "@/components/TaxOfficeLocator";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 import { FILING_SEASON, daysUntil } from "@/lib/tax-year";
 
 export const Route = createFileRoute("/")({
@@ -45,6 +59,29 @@ const FEATURES = [
     icon: Languages,
     title: "In your language",
     body: "Ask questions in isiZulu, isiXhosa, Afrikaans, Sepedi, Setswana, Sesotho, Xitsonga, siSwati, Tshivenda, isiNdebele or English. Short answers, no jargon, no shame.",
+  },
+];
+
+const EXPLAINERS = [
+  {
+    q: "What is PAYE, and why does it change?",
+    a: "PAYE is the tax your employer takes off your salary every month and pays over to SARS on your behalf. It changes when your pay changes — a bonus, overtime or a raise pushes part of your income onto a higher step of the tax staircase for that month.",
+  },
+  {
+    q: "Is every rand in my bank account income?",
+    a: "No. A loan from family, a refund, money you are holding for someone else, or your own savings moving between accounts are not income. Without a record, though, an assessment can treat everything that landed in the account as if it were — which is why tagging each deposit matters.",
+  },
+  {
+    q: "Why does a photo of the slip matter more than the amount?",
+    a: "A number in a spreadsheet proves nothing on its own. The photograph, with the date and the shop on it, is the evidence. Keeping the picture attached to the entry is what turns bookkeeping into something you can actually show.",
+  },
+  {
+    q: "What is a capital item?",
+    a: "Equipment or a vehicle that lasts for years — a fridge, a bakkie, a sewing machine. It is written off gradually over its useful life rather than deducted all at once, so we keep it out of the month's running costs.",
+  },
+  {
+    q: "When must I file?",
+    a: "Individuals who are not provisional taxpayers file by 23 October 2026. Provisional taxpayers — people with business or freelance income who estimate their tax twice a year — file by 22 January 2027. Filing late brings a fixed monthly penalty that keeps growing while the return is outstanding.",
   },
 ];
 
@@ -108,15 +145,49 @@ function Landing() {
       </section>
 
       <section className="mx-auto max-w-6xl px-4 py-8">
-        <div className="grid gap-4 sm:grid-cols-2">
-          {FEATURES.map((f) => (
-            <div key={f.title} className="surface p-5">
-              <f.icon className="size-5 text-primary" aria-hidden />
-              <h2 className="mt-3 font-display text-lg font-semibold">{f.title}</h2>
-              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{f.body}</p>
-            </div>
-          ))}
+        <h2 className="font-display text-xl font-semibold">What TaxGuard SA does for you</h2>
+        <Carousel opts={{ align: "start" }} className="mt-4">
+          <CarouselContent>
+            {FEATURES.map((f) => (
+              <CarouselItem key={f.title} className="sm:basis-1/2 lg:basis-1/3">
+                <div className="surface h-full p-5">
+                  <f.icon className="size-5 text-primary" aria-hidden />
+                  <h3 className="mt-3 font-display text-lg font-semibold">{f.title}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{f.body}</p>
+                </div>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          <div className="mt-4 flex justify-end gap-2">
+            <CarouselPrevious className="static translate-y-0" />
+            <CarouselNext className="static translate-y-0" />
+          </div>
+        </Carousel>
+      </section>
+
+      <section className="mx-auto max-w-6xl px-4 py-8">
+        <div className="surface p-6">
+          <h2 className="font-display text-xl font-semibold">Questions people actually ask</h2>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Tap a question to open the plain-language answer.
+          </p>
+          <Accordion type="single" collapsible className="mt-3">
+            {EXPLAINERS.map((item) => (
+              <AccordionItem key={item.q} value={item.q}>
+                <AccordionTrigger className="text-left text-sm font-medium">
+                  {item.q}
+                </AccordionTrigger>
+                <AccordionContent className="text-sm leading-relaxed text-muted-foreground">
+                  {item.a}
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
         </div>
+      </section>
+
+      <section className="mx-auto max-w-6xl px-4 py-8">
+        <TaxOfficeLocator />
       </section>
 
       <section className="mx-auto max-w-6xl px-4 pb-16">
